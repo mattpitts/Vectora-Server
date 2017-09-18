@@ -31,8 +31,12 @@ router.get('/:id/projects', (req,res,next) => {
 		})
 })
 
-router.post(':/id/projects', (req,res,next) => {
-
+router.post('/projects', (req,res,next) => {
+	console.log(req.body);
+	projects.insert(req.body)
+		.then(response => {
+			res.json(response)
+		})
 })
 
 router.get('/project', (req,res,next) => {
