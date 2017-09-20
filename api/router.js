@@ -39,6 +39,22 @@ router.post('/projects', (req,res,next) => {
 		})
 })
 
+router.put('/projects/:id', (req,res,next) => {
+	projects.findOne({_id: req.params.id})
+		.then(project => {
+			projects.update({ _id: req.params.id }, {
+				name: project.name,
+				userID: project.userID,
+				shapes: req.body.shapes
+			}).then(response => {
+					res.json(response)
+			}).catch(err => {
+				res.json(err)
+			})
+
+		})
+})
+
 router.get('/project', (req,res,next) => {
 	const data = projects.find({});
 	return data.then((data) => {
