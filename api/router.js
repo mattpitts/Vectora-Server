@@ -53,6 +53,13 @@ router.put('/projects/:id', (req,res,next) => {
 			})
 
 		})
+});
+
+router.delete('/projects/:id', (req,res,next) => {
+	projects.remove({_id: req.params.id})
+		.then(response => {
+			res.json(response)
+		})
 })
 
 router.get('/project', (req,res,next) => {
