@@ -20,7 +20,6 @@ router.post('/auth/login', (req,res,next) => {
 	if(validUser(req.body)) {
 		users.findOne({ email: req.body.email })
 			.then(user => {
-				console.log(user);
 				if(user) {
 					bcrypt.compare(req.body.password, user.password)
 						.then(result => {
@@ -30,7 +29,6 @@ router.post('/auth/login', (req,res,next) => {
 								}, process.env.TOKEN_SECRET, {
 									expiresIn: '7d'
 								}, (err, token) => {
-									console.log(user);
 									res.json({
 										userID: user._id,
 										username: user.username,

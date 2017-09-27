@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const db =  monk(process.env.MONGODB_URI);
 const users = db.get('users');
 const projects = db.get('projects');
+const authMiddleware = require('./authMiddleware');
 
 const router = express.Router();
 
@@ -23,15 +24,14 @@ router.get('/users', (req,res,next) => {
 	})
 });
 
-router.get('/:id/projects', (req,res,next) => {
-	console.log(req.params.id);
+router.get('/:id/projects', authMiddleware.allowAccess, (req,res,next) => {
 	return projects.find({ userID: req.params.id })
 		.then(data => {
 			res.json(data)
 		})
 })
 
-router.post('/projects', (req,res,next) => {
+router.post('/:id/projects', authMiddleware.allowAccess, (req,res,next) => {
 	console.log(req.body);
 	projects.insert(req.body)
 		.then(response => {
@@ -39,10 +39,10 @@ router.post('/projects', (req,res,next) => {
 		})
 })
 
-router.put('/projects/:id', (req,res,next) => {
-	projects.findOne({_id: req.params.id})
+router.put('/:id/projects/:projectID', authMiddleware.allowAccess, (req,res,next) => {
+	projects.findOne({_id: req.params.projectID})
 		.then(project => {
-			projects.update({ _id: req.params.id }, {
+			projects.update({ _id: req.params.projectID }, {
 				name: project.name,
 				userID: project.userID,
 				shapes: req.body.shapes
@@ -55,20 +55,21 @@ router.put('/projects/:id', (req,res,next) => {
 		})
 });
 
-router.delete('/projects/:id', (req,res,next) => {
-	projects.remove({_id: req.params.id})
+router.delete('/:id/projects/:projectID', authMiddleware.allowAccess, (req,res,next) => {
+	console.log(req.params);
+	projects.remove({_id: req.params.projectID})
 		.then(response => {
 			res.json(response)
 		})
 })
 
-router.get('/project', (req,res,next) => {
-	const data = projects.find({});
-	return data.then((data) => {
-		res.json(data);
-	})
-
-	// res.json({message: 'users'});
-});
+// router.get('/project', (req,res,next) => {
+// 	const data = projects.find({});
+// 	return data.then((data) => {
+// 		res.json(data);
+// 	})
+//
+// 	// res.json({message: 'users'});
+// });
 
 module.exports = router;

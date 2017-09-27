@@ -7,7 +7,8 @@ require('dotenv').config();
 
 const app = express();
 const router = require('./api/router');
-const auth = require('./api/auth')
+const auth = require('./api/auth');
+const authMiddleware = require('./api/authMiddleware');
 
 // app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -18,8 +19,11 @@ app.use(cors({
 	origin: process.env.CORS_ORIGIN
 }));
 
+app.use(authMiddleware.checkTokenSetUser);
+// app.use(authMiddleware.allowAccess);
+
+app.use('/api/v1', auth);
 app.use('/api/v1', router);
-app.use('/api/v1', auth)
 
 
 app.use(function(req, res, next) {
@@ -36,4 +40,6 @@ app.use(function(err, req, res, next) {
 	  error: req.app.get('env') === 'development' ? err : {}
   });
 });
+
+// req.app.get('env') === 'development' ? err : {}
 module.exports = app;
