@@ -19,10 +19,8 @@ app.use(cors({
 	origin: process.env.CORS_ORIGIN
 }));
 
-app.use(authMiddleware.checkTokenSetUser);
-// app.use(authMiddleware.allowAccess);
-
 app.use('/api/v1', auth);
+app.use(authMiddleware.checkTokenSetUser);
 app.use('/api/v1', router);
 
 

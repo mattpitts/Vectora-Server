@@ -56,7 +56,6 @@ router.put('/:id/projects/:projectID', authMiddleware.allowAccess, (req,res,next
 });
 
 router.delete('/:id/projects/:projectID', authMiddleware.allowAccess, (req,res,next) => {
-	console.log(req.params);
 	projects.remove({_id: req.params.projectID})
 		.then(response => {
 			res.json(response)

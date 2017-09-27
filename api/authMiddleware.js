@@ -14,11 +14,7 @@ function checkTokenSetUser(req,res,next) {
 }
 
 function allowAccess(req,res,next) {
-	console.log('asdas');
-	console.log(req.params.id);
-	console.log(req.user.id);
 	if(req.params.id === req.user.id) {
-
 		next();
 	} else {
 		req.status(401);
